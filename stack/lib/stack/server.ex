@@ -1,8 +1,8 @@
 defmodule Stack.Server do
   use GenServer
 
-  def start_link(stack) do
-    GenServer.start_link(__MODULE__, stack, name: __MODULE__)
+  def start_link(_) do
+    GenServer.start_link(__MODULE__, nil, name: __MODULE__)
   end
 
   def pop do
@@ -13,18 +13,18 @@ defmodule Stack.Server do
     GenServer.call(__MODULE__, {:push, element})
   end
 
-  def init(initial_array) do
-    { :ok, initial_array }
+  def init(_) do
+    { :ok, Stack.Stash.get() }
   end
 
   def handle_call(:pop, _from, stack) do
     next_stack = pop(stack)
 
-    IO.puts("\n[current_stack]")
-    print_stack(stack)
-    IO.puts("\n[next_stack]")
-    print_stack(next_stack)
-    IO.puts("\n[_from] #{inspect _from}")
+    # IO.puts("\n[current_stack]")
+    # print_stack(stack)
+    # IO.puts("\n[next_stack]")
+    # print_stack(next_stack)
+    # IO.puts("\n[_from] #{inspect _from}")
 
     { :reply, next_stack, next_stack }
   end
@@ -34,21 +34,24 @@ defmodule Stack.Server do
     { :reply, next_stack, next_stack }
   end
 
+  def terminate(_reason, stack) do
+    Stack.Stash.set(stack)
+  end
+
   defp pop([]) do
-    IO.puts("비어있음")
+    # IO.puts("비어있음")
     []
   end
   defp pop([head]) do
-    IO.puts("하나만 있음, #{head}")
+    # IO.puts("하나만 있음, #{head}")
     []
   end
   defp pop([head | tail]) do
-    IO.puts("head: #{head}")
-    IO.puts("tail:")
-    print_stack(tail)
+    # IO.puts("head: #{head}")
+    # IO.puts("tail:")
+    # print_stack(tail)
     tail
   end
-
   defp print_stack(stack) do
     for elem <- stack do
       IO.puts("elem: #{elem}")
