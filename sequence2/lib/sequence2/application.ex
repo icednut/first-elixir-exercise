@@ -10,7 +10,7 @@ defmodule Sequence2.Application do
     children = [
       # Starts a worker by calling: Sequence2.Worker.start_link(arg)
       # {Sequence2.Worker, arg}
-      {Sequence2.Stash, 123},
+      {Sequence2.Stash, Application.get_env(:sequence2, :initial_number)},
       {Sequence2.Server, nil}
     ]
 

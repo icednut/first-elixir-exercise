@@ -14,8 +14,12 @@ defmodule Stack.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
+      mod: {Stack.Application, Application.get_env(:stack, :initial_stack)},
+      registered: [
+        Stack.Application
+      ],
       extra_applications: [:logger],
-      mod: {Stack.Application, []}
+      env: [initial_stack: []]
     ]
   end
 
